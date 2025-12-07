@@ -69,7 +69,7 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    name: "pookie",
+    name: process.env.COOKIE_NAME || "default",
     cookie: {
       maxAge: 1000 * 60 * 60 * 6, // 6 hour expiration
       secure: process.env.NODE_ENV === "production", // Only over HTTPS in production
