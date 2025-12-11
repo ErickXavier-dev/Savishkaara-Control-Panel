@@ -301,38 +301,946 @@ Savishkaara-Control-Panel/
 └── README.md                   # This file
 ```
 
-## 🔌 API Endpoints
+## 🔌 API Documentation
 
-### Authentication
-- `POST /login` - User login
-- `POST /logout` - User logout
-- `GET /check-auth` - Check authentication status
-- `POST /update-password` - Update user password
+The API follows RESTful principles and uses JSON for request/response bodies. All endpoints require appropriate authentication unless otherwise specified.
 
-### Events
-- `GET /events` - Get all events
-- `POST /events` - Create new event
-- `GET /events/:id` - Get event by ID
-- `PUT /events/:id` - Update event
-- `DELETE /events/:id` - Delete event
-- `GET /event-registrations` - Get event registrations
+### Base URL
+- **Development**: `http://localhost:5000`
+- **Production**: `https://testapi.amritaiedc.site`
 
-### Users
-- `GET /users` - Get all users
-- `POST /users` - Create new user
-- `GET /users/:id` - Get user by ID
-- `PUT /users/:id` - Update user
-- `DELETE /users/:id` - Delete user
-- `GET /users/overview` - Get user statistics
+### Common Headers
+```javascript
+{
+  "Content-Type": "application/json",
+  "X-Allowed-Origin": "savishkaara.in" // Required in production
+}
+```
 
-### System Monitoring
-- `GET /status` - Get server status and metrics
-- `POST /update-server-status` - Update server mode (admin only)
+---
 
-### Real-time (WebSocket)
-- `connection` - Establish WebSocket connection
-- `disconnect` - Handle client disconnect
-- Real-time event and room updates
+## 🔐 Authentication Endpoints
+
+### Login
+Authenticate a user and create a session.
+
+**Endpoint:** `POST /login-auth`
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Login successful",
+  "objectID": "507f1f77bcf86cd799439011",
+  "name": "John Doe",
+  "gender": "male",
+  "department": "CSE",
+  "role": "admin"
+}
+```
+
+**Password Reset Required (200 OK):**
+```json
+{
+  "redirectToUpdatePassword": true,
+  "objectID": "507f1f77bcf86cd799439011",
+  "name": "John Doe",
+  "gender": "male",
+  "department": "CSE",
+  "role": "coor"
+}
+```
+
+**Error Response (401 Unauthorized):**
+```json
+{
+  "error": "Invalid username or password"
+}
+```
+
+---
+
+### Check Authentication Status
+Verify if the current session is authenticated.
+
+**Endpoint:** `GET /check-auth`
+
+**Success Response (200 OK):**
+```json
+{
+  "isAuthenticated": true,
+  "objectID": "507f1f77bcf86cd799439011",
+  "name": "John Doe",
+  "gender": "male",
+  "department": "CSE",
+  "role": "admin"
+}
+```
+
+**Unauthenticated Response (200 OK):**
+```json
+{
+  "isAuthenticated": false
+}
+```
+
+---
+
+### Update Password
+Update user password (typically after first login).
+
+**Endpoint:** `POST /update-password`
+
+**Authentication:** Required (Session-based)
+
+**Request Body:**
+```json
+{
+  "password": "newSecurePassword123"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Password updated successfully"
+}
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "User not found"
+}
+```
+
+---
+
+### Logout
+End the current user session.
+
+**Endpoint:** `POST /logout`
+
+**Authentication:** Required
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+## 🎉 Event Management Endpoints
+
+### Get All Events
+Retrieve list of all events with basic information.
+
+**Endpoint:** `GET /events`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Tech Fest 2025",
+    "venue": "Main Auditorium",
+    "coordinators": ["John Doe", "Jane Smith"],
+    "status": "upcoming",
+    "date_time": "2025-12-20T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+### Get Event by ID
+Retrieve detailed information about a specific event.
+
+**Endpoint:** `GET /events/:eventId`
+
+**Parameters:**
+- `eventId` (string, required): MongoDB ObjectId of the event
+
+**Success Response (200 OK):**
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "name": "Tech Fest 2025",
+  "venue": "Main Auditorium",
+  "date_time": "2025-12-20T10:00:00.000Z",
+  "fee": 500,
+  "coordinators": ["John Doe", "Jane Smith"],
+  "faculty_coordinators": ["Dr. Kumar", "Prof. Sharma"],
+  "form_link": "https://forms.example.com/techfest",
+  "excel_link": "https://docs.example.com/excel",
+  "status": "upcoming"
+}
+```
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "error": "Invalid event ID"
+}
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "Event not found"
+}
+```
+
+---
+
+### Get Event by Name
+Retrieve event details by event name.
+
+**Endpoint:** `GET /events/by-name/:name`
+
+**Parameters:**
+- `name` (string, required): Event name
+
+**Success Response (200 OK):**
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "name": "Tech Fest 2025",
+  "venue": "Main Auditorium",
+  "date_time": "2025-12-20T10:00:00.000Z",
+  "fee": 500,
+  "coordinators": ["John Doe", "Jane Smith"],
+  "faculty_coordinators": ["Dr. Kumar", "Prof. Sharma"],
+  "status": "upcoming"
+}
+```
+
+---
+
+### Get Events by Coordinator
+Retrieve all events managed by a specific coordinator.
+
+**Endpoint:** `GET /events/by-coordinator/:username`
+
+**Parameters:**
+- `username` (string, required): Coordinator's username
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Tech Fest 2025",
+    "venue": "Main Auditorium",
+    "coordinators": ["johncoord"],
+    "faculty_coordinators": ["Dr. Kumar"],
+    "status": "upcoming"
+  }
+]
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "No events found for this username",
+  "details": "Username 'john' not found in coordinators or faculty coordinators"
+}
+```
+
+---
+
+### Create Event
+Add a new event to the system.
+
+**Endpoint:** `POST /addEvent`
+
+**Authentication:** Required (Admin/Super role)
+
+**Request Body:**
+```json
+{
+  "name": "Tech Fest 2025",
+  "venue": "Main Auditorium",
+  "dateAndTime": "2025-12-20T10:00:00.000Z",
+  "fee": 500,
+  "coordinators": ["John Doe", "Jane Smith"],
+  "facultyCoordinators": ["Dr. Kumar", "Prof. Sharma"],
+  "registrationLink": "https://forms.example.com/techfest",
+  "excelLink": "https://docs.example.com/excel"
+}
+```
+
+**Success Response (201 Created):**
+```json
+{
+  "message": "Event added successfully",
+  "event": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Tech Fest 2025",
+    "venue": "Main Auditorium",
+    "date_time": "2025-12-20T10:00:00.000Z",
+    "fee": 500,
+    "coordinators": ["John Doe", "Jane Smith"],
+    "faculty_coordinators": ["Dr. Kumar", "Prof. Sharma"],
+    "form_link": "https://forms.example.com/techfest",
+    "excel_link": "https://docs.example.com/excel",
+    "status": "upcoming"
+  }
+}
+```
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "error": "All required fields must be provided"
+}
+```
+
+---
+
+### Update Event Status
+Change the status of an event (upcoming, ongoing, completed).
+
+**Endpoint:** `POST /events/update-status-by-name`
+
+**Authentication:** Required
+
+**Request Body:**
+```json
+{
+  "name": "Tech Fest 2025",
+  "status": "ongoing"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "name": "Tech Fest 2025",
+  "status": "ongoing",
+  "venue": "Main Auditorium"
+}
+```
+
+---
+
+### Update Event Details
+Update comprehensive event information.
+
+**Endpoint:** `POST /events/update-details-by-name`
+
+**Authentication:** Required
+
+**Request Body:**
+```json
+{
+  "name": "Tech Fest 2025",
+  "venue": "New Auditorium",
+  "date_time": "2025-12-21T10:00:00.000Z",
+  "fee": 600,
+  "coordinators": ["John Doe", "Jane Smith", "Bob Wilson"],
+  "faculty_coordinators": ["Dr. Kumar"],
+  "form_link": "https://forms.example.com/techfest-updated",
+  "excel_link": "https://docs.example.com/excel-updated"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Event updated successfully",
+  "event": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Tech Fest 2025",
+    "venue": "New Auditorium",
+    "date_time": "2025-12-21T10:00:00.000Z",
+    "fee": 600
+  }
+}
+```
+
+---
+
+### Get Event Summary
+Get registration and revenue summary for a specific event.
+
+**Endpoint:** `GET /events/summary/:eventName`
+
+**Parameters:**
+- `eventName` (string, required): URL-encoded event name
+
+**Success Response (200 OK):**
+```json
+{
+  "totalRegistrations": 150,
+  "totalRevenue": 75000
+}
+```
+
+---
+
+## 📊 Event Analytics Endpoints
+
+### Get Events Count
+Retrieve total and verified registration counts.
+
+**Endpoint:** `GET /events-count`
+
+**Success Response (200 OK):**
+```json
+{
+  "totalRegistrations": 500,
+  "verifiedRegistrations": 450
+}
+```
+
+---
+
+### Get Events Revenue
+Calculate revenue for all events.
+
+**Endpoint:** `GET /events-revenue`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "name": "Tech Fest 2025",
+    "revenue": 75000
+  },
+  {
+    "name": "Cultural Night",
+    "revenue": 45000
+  }
+]
+```
+
+---
+
+### Get Event Revenue by Name
+Get total revenue for a specific event.
+
+**Endpoint:** `GET /events-revenueper/:eventName`
+
+**Parameters:**
+- `eventName` (string, required): URL-encoded event name
+
+**Success Response (200 OK):**
+```json
+{
+  "eventName": "Tech Fest 2025",
+  "totalRevenue": 75000
+}
+```
+
+---
+
+### Get Registration Trend
+Get registration counts grouped by event.
+
+**Endpoint:** `GET /registration-trend`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "event": "Tech Fest 2025",
+    "count": 150
+  },
+  {
+    "event": "Cultural Night",
+    "count": 90
+  }
+]
+```
+
+---
+
+### Get Top Events
+Retrieve top 5 events by registration count.
+
+**Endpoint:** `GET /top-events`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "event": "Tech Fest 2025",
+    "count": 150
+  },
+  {
+    "event": "Cultural Night",
+    "count": 90
+  }
+]
+```
+
+---
+
+### Get Ongoing Events
+Retrieve all currently ongoing events.
+
+**Endpoint:** `GET /ongoing-events`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "name": "Tech Fest 2025",
+    "venue": "Main Auditorium"
+  }
+]
+```
+
+---
+
+## 🎫 Event Registration Endpoints
+
+### Get All Event Registrations
+Retrieve all event registrations.
+
+**Endpoint:** `GET /event-registrations`
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "_id": "507f1f77bcf86cd799439011",
+    "ticket_number": "TKT001",
+    "timestamp": "2025-12-15T10:30:00.000Z",
+    "ticket_details": {
+      "event": "Tech Fest 2025",
+      "amount": "500"
+    },
+    "verified": true
+  }
+]
+```
+
+---
+
+### Delete Event Registration
+Remove a specific registration.
+
+**Endpoint:** `POST /delete-event-registrations/:id`
+
+**Parameters:**
+- `id` (string, required): MongoDB ObjectId of the registration
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Registration deleted successfully",
+  "deletedId": "507f1f77bcf86cd799439011"
+}
+```
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "error": "Invalid registration ID format"
+}
+```
+
+---
+
+### Request Ticket Generation
+Forward ticket generation request to ticket service.
+
+**Endpoint:** `POST /request_ticket`
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "event": "Tech Fest 2025",
+  "amount": 500
+}
+```
+
+**Success Response:** Forwards response from ticket generation service
+
+---
+
+### Verify Ticket
+Mark participant attendance for an event.
+
+**Endpoint:** `POST /verify-ticket`
+
+**Request Body:**
+```json
+{
+  "ticketID": "TKT001"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Participant attendance marked successfully"
+}
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "Participant not found"
+}
+```
+
+---
+
+## 👥 User Management Endpoints
+
+### Get Coordinators
+Retrieve all users with coordinator role.
+
+**Endpoint:** `GET /coordinators`
+
+**Success Response (200 OK):**
+```json
+{
+  "coordinators": [
+    {
+      "name": "John Doe",
+      "username": "johndoe"
+    },
+    {
+      "name": "Jane Smith",
+      "username": "janesmith"
+    }
+  ]
+}
+```
+
+---
+
+### Get Distinct Events
+Retrieve list of all unique event names.
+
+**Endpoint:** `GET /distinctEvents`
+
+**Success Response (200 OK):**
+```json
+{
+  "events": [
+    "Tech Fest 2025",
+    "Cultural Night",
+    "Sports Day"
+  ]
+}
+```
+
+---
+
+### Add User
+Create a new user account.
+
+**Endpoint:** `POST /addUser`
+
+**Authentication:** Required (Admin/Super role)
+
+**Request Body (Admin/Super):**
+```json
+{
+  "name": "John Doe",
+  "username": "johndoe",
+  "gender": "male",
+  "role": "admin",
+  "mobile": "9876543210",
+  "dept": "CSE"
+}
+```
+
+**Request Body (Coordinator):**
+```json
+{
+  "name": "Jane Smith",
+  "username": "janesmith",
+  "gender": "female",
+  "role": "coor",
+  "mobile": "9876543211",
+  "event_relation": "Tech Fest 2025"
+}
+```
+
+**Success Response (201 Created):**
+```json
+{
+  "message": "User added successfully",
+  "user": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "John Doe",
+    "username": "johndoe",
+    "mobile": 9876543210,
+    "role": "admin",
+    "dept": "CSE",
+    "status": -1,
+    "gender": "male"
+  }
+}
+```
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "error": "Name, username, gender, role, and mobile are required."
+}
+```
+
+**Error Response (400 Bad Request - Duplicate):**
+```json
+{
+  "error": "User already exists"
+}
+```
+
+---
+
+### Get User Details
+Retrieve details for all admins and coordinators.
+
+**Endpoint:** `GET /overview/details`
+
+**Success Response (200 OK):**
+```json
+{
+  "users": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "John Doe",
+      "role": "admin",
+      "event_relation": "none",
+      "mobile": "9876543210"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439012",
+      "name": "Jane Smith",
+      "role": "coor",
+      "event_relation": "Tech Fest 2025",
+      "mobile": "9876543211"
+    }
+  ]
+}
+```
+
+---
+
+### Get Departments by Names
+Retrieve department information for multiple users.
+
+**Endpoint:** `POST /users/depts-by-name`
+
+**Request Body:**
+```json
+{
+  "names": ["John Doe", "Jane Smith", "Bob Wilson"]
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "John Doe": "CSE",
+  "Jane Smith": "ECE",
+  "Bob Wilson": "ME"
+}
+```
+
+---
+
+### Reset User Status
+Reset user status and password to default.
+
+**Endpoint:** `POST /overview/reset-status/:mobile`
+
+**Parameters:**
+- `mobile` (string, required): User's mobile number
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Status reset and password updated for 9876543210"
+}
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "User not found"
+}
+```
+
+---
+
+## 🖥️ System Monitoring Endpoints
+
+### Get Server Status
+Retrieve comprehensive server health metrics.
+
+**Endpoint:** `GET /status`
+
+**Success Response (200 OK):**
+```json
+{
+  "status": "online",
+  "uptime": "2d 5h 30m",
+  "cpu": {
+    "usage": 45.2,
+    "cores": 8
+  },
+  "memory": {
+    "total": 16384,
+    "used": 8192,
+    "free": 8192,
+    "usagePercent": 50
+  },
+  "process": {
+    "cpu": 12.5,
+    "memory": 256
+  }
+}
+```
+
+---
+
+### Update Server Status
+Change server operational mode.
+
+**Endpoint:** `POST /update-server-status`
+
+**Authentication:** Required (Admin/Super role)
+
+**Request Body:**
+```json
+{
+  "status": "restricted"
+}
+```
+
+**Allowed Values:**
+- `online` - Full access to all pages
+- `restricted` - Limited access to specific pages only
+- `offline` - API only, all pages blocked
+
+**Success Response (200 OK):**
+```
+Status code 200 with no body
+```
+
+---
+
+## 🔌 WebSocket Events
+
+The application uses Socket.io for real-time communication.
+
+### Connection
+Client connects to WebSocket server.
+
+**Event:** `connection`
+
+**Server acknowledges:**
+```javascript
+socket.emit('connected', { message: 'Connected to WebSocket server' });
+```
+
+---
+
+### Room Updates
+Subscribe to specific room for updates.
+
+**Event:** `join-room`
+
+**Emit:**
+```javascript
+socket.emit('join-room', { room: 'dashboard' });
+```
+
+**Available Rooms:**
+- `dashboard` - Main dashboard updates
+- `samridhi` - Samridhi event updates
+- `server` - Server status updates
+- `eventso` - Events overview updates
+- `eventsa` - Events admin updates
+- `userso` - Users overview updates
+- `usersa` - Users admin updates
+- `vevents` - Verified events updates
+- `myevent` - Individual event updates
+
+---
+
+### Receive Updates
+Listen for real-time updates in subscribed room.
+
+**Event:** `update`
+
+**Server emits:**
+```javascript
+socket.on('update', (data) => {
+  // Handle update data
+  console.log('Received update:', data);
+});
+```
+
+---
+
+## 📝 Error Responses
+
+All error responses follow a consistent format:
+
+```json
+{
+  "error": "Human-readable error message",
+  "details": "Technical details (optional)"
+}
+```
+
+### Common HTTP Status Codes
+
+- **200 OK** - Request successful
+- **201 Created** - Resource created successfully
+- **400 Bad Request** - Invalid request parameters
+- **401 Unauthorized** - Authentication required or failed
+- **403 Forbidden** - Insufficient permissions
+- **404 Not Found** - Resource not found
+- **500 Internal Server Error** - Server error
+
+---
+
+## 🔑 Authentication & Authorization
+
+### Session-Based Authentication
+The API uses Express sessions with HTTP-only cookies. After successful login, a session is created and maintained through cookies.
+
+### Role-Based Access Control (RBAC)
+
+**Roles:**
+- `super` - Full system access, can manage all resources
+- `admin` - Administrative access, can manage events and users
+- `coor` / `coordinator` - Limited access to assigned events only
+
+**Protected Endpoints:**
+All endpoints except `/login-auth` and `/check-auth` require authentication.
+
+### Required Session Variables
+- `objectID` - User's MongoDB ObjectId
+- `username` - User's username
+- `user_role` - User's role (super/admin/coor)
+- `name` - User's full name
+- `department` - User's department
+- `event` - Assigned event (for coordinators)
+- `gender` - User's gender
 
 ## 🔐 Environment Variables
 
