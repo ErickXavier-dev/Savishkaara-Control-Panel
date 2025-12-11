@@ -10,12 +10,14 @@ import Room from "../utils/roomManager";
 const Sidebar = ({ isMinimized, darkMode, activePage }) => {
   const [openEvents, setOpenEvents] = React.useState(false);
   const [openUsers, setOpenUsers] = React.useState(false);
+  const [openServer, setOpenServer] = React.useState(false);
   const [leaveCount, setLeaveCount] = React.useState(0); // Persist leaveCount across renders
   const navigate = useNavigate(); // Initialize useNavigate
   const socket = React.useContext(WebSocketContext); // Access WebSocket instance
 
   const handleEventsClick = () => setOpenEvents(!openEvents);
   const handleUsersClick = () => setOpenUsers(!openUsers);
+  const handleServerClick = () => setOpenServer(!openServer);
 
   const userRole = Cookies.get("role");
 
@@ -235,23 +237,102 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
 
         {/* Render Server if allowed */}
         {allowedOptions.includes("Server") && (
-          <Tooltip title="Server" placement="right" disableHoverListener={!isMinimized}>
-            <ListItemButton
-              onClick={() => navigateTo("/server", "server")} // Navigate to server
-              sx={{
-                color: "#fff",
-                justifyContent: isMinimized ? "left" : "flex-start",
-                "&:hover": {
-                  backgroundColor: darkMode ? "#333" : "#222a57",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
-                <img src="/icons/host_24dp_EFEFEF_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
-              </ListItemIcon>
-              {!isMinimized && <ListItemText primary="Server" />}
-            </ListItemButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Server" placement="right" disableHoverListener={!isMinimized}>
+              <ListItemButton
+                onClick={handleServerClick}
+                sx={{
+                  color: "#fff",
+                  justifyContent: isMinimized ? "left" : "flex-start",
+                  "&:hover": {
+                    backgroundColor: darkMode ? "#333" : "#222a57",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/host_24dp_EFEFEF_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                </ListItemIcon>
+                {!isMinimized && <ListItemText primary="Server" />}
+                {isMinimized ? null : openServer ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </Tooltip>
+            <Collapse in={openServer && !isMinimized} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/health_metrics_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="Health" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/domain_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="Domain" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/dashboard_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="Control Panel" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/dining_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="Samridhi" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/confirmation_number_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="API - Ticket" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/license_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="API - Certificate" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/forms_apps_script_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="API - Forms" />
+                </ListItemButton>
+                <ListItemButton
+                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  sx={{ pl: 6, color: "#aaa" }}
+                >
+                  <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
+                  <img src="/icons/mobile_24dp_AAAAAA_FILL0_wght400_GRAD0_opsz24.svg" alt="server" width="24" />
+                  </ListItemIcon>
+                  <ListItemText primary="API - Attendance" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </>
         )}
 
         {/* Render My Event if allowed */}
