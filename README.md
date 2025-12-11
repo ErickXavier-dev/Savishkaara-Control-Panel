@@ -428,8 +428,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Erick Xavier** - *Initial work* - [ErickXavier-dev](https://github.com/ErickXavier-dev)
 - **Meenakshi B** - *Intial work* - [Meenakshi2002-26](https://github.com/Meenakshi2002-28)
-- **Akshay Sunith** - *Intial Work* - [Thanasis504] (https://github.com/Thanasis504)
-- **Chinmay Shashedaran** - *Initial work* - ([Obito8010](https://github.com/obito8010))
+- **Akshay Sunith** - *Intial Work* - [Thanasis504](https://github.com/Thanasis504)
+- **Chinmay Shashedaran** - *Initial work* - [Obito8010](https://github.com/obito8010)
 
 ## 🙏 Acknowledgments
 
