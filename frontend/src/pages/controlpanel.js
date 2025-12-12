@@ -59,7 +59,7 @@ const ControlPanel = () => {
   return (
     <Layout title="Domain" activePage="domain">
       <div>
-        <h1>Events</h1>
+        <h1>Server-Control-Panel</h1>
         <p>This is the main events page.</p>
       </div>
     </Layout>

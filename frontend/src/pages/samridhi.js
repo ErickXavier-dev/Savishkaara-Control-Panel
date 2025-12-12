@@ -59,7 +59,7 @@ const Samridhi = () => {
   return (
     <Layout title="Samridhi" activePage="samridhi">
       <div>
-        <h1>Events</h1>
+        <h1>Server-samridhi</h1>
         <p>This is the main events page.</p>
       </div>
     </Layout>

@@ -114,16 +114,16 @@ const EventRoutes = require("./routes/eventManager");
 const userRoutes = require('./routes/users');
 const UserAdd = require("./routes/addusers");
 const userOverviewRoutes = require('./routes/userOVERVIEW');
-
+const healthRoutes = require('./routes/metrics')
 const RealTimeRoutes = require("./routes/realTime");
 const VerificationRoutes = require("./routes/verify");
 
 
 
-
+app.use("/", healthRoutes); // So endpoint becomes /api/health
 app.use("/", AuthenticationRoutes);
 app.use("/", EventRoutes);
-app.use('/', userRoutes);
+app.use("/", userRoutes);
 app.use("/", UserAdd);
 app.use('/', userOverviewRoutes);
 
