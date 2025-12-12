@@ -7,7 +7,7 @@ import { WebSocketContext } from "../App"; // Import WebSocket Context
 import Room from "../utils/roomManager"
 import Layout from "../layouts/layout";
 
-const Server = () => {
+const Attendance = () => {
   const navigate = useNavigate();
     const socket = useContext(WebSocketContext); // Access global WebSocket instance
     const objID = Cookies.get("objId");
@@ -15,7 +15,7 @@ const Server = () => {
 
     useEffect(() => {
       // Update the document title when the component mounts
-      document.title = 'Server';
+      document.title = 'Attendance - API';
     }, []);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const Server = () => {
 
       if (socket && !hasJoinedRoom) {
         // Join the "add-event" room with authentication
-        Room.join(socket, "server", objID);
+        Room.join(socket, "attendance", objID);
   
         // Mark the room as joined
         hasJoinedRoom = true;
@@ -48,7 +48,7 @@ const Server = () => {
       // Cleanup on unmount
       return () => {
         if (hasJoinedRoom) {
-          socket.emit("leave-room", "server");
+          socket.emit("leave-room", "attendance");
         }
         socket.off("message");
         socket.off("redirect");
@@ -57,13 +57,13 @@ const Server = () => {
     }, [socket, objID, navigate]);
 
   return (
-    <Layout title="Server" activePage="server">
+    <Layout title="Attendance - API" activePage="attendance">
       <div>
-        <h1>Events</h1>
-        <p>This is the main events page.</p>
+        <h1>Attendance - API</h1>
+        <p>This is the Server management page for Attendance API</p>
       </div>
     </Layout>
   );
 };
 
-export default Server;
+export default Attendance;

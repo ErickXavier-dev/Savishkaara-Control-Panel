@@ -12,8 +12,8 @@ module.exports = function (io) {
                     return socket.emit("error", { message: "Unauthorized: User not found" });
                 }
                 const ROOM_ACCESS = {
-                    'super': ['dashboard', 'samridhi', 'server', 'eventso', 'eventsa', 'myevent', 'userso', 'usersa','eventreg', 'mailer'],
-                    'admin': ['dashboard', 'samridhi', 'eventso','myevent'],
+                    'super': ['dashboard', 'samridhi', 'server', 'eventso', 'eventsa', 'myevent', 'userso', 'usersa','eventreg', 'mailer', 'health', 'domain', 'ticket', 'certificate', 'forms', 'attendance', 'control-panel' ],
+                    'admin': ['dashboard', 'eventso','myevent'],
                     'coor': ['myevent']
                 };
                 const allowedRooms = ROOM_ACCESS[user.role];

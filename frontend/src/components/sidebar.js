@@ -259,7 +259,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
             <Collapse in={openServer && !isMinimized} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  onClick={() => navigateTo("/server/health", "userso")} // Navigate to users overview
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -268,7 +268,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="Health" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  onClick={() => navigateTo("/server/domain", "usersa")} // Navigate to add user
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -277,7 +277,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="Domain" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  onClick={() => navigateTo("/server/control-panel", "userso")} // Navigate to users overview
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -286,7 +286,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="Control Panel" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  onClick={() => navigateTo("/server/samridhi", "usersa")} // Navigate to add user
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -295,7 +295,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="Samridhi" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  onClick={() => navigateTo("/server/ticket-api", "userso")} // Navigate to users overview
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -304,7 +304,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="API - Ticket" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  onClick={() => navigateTo("/server/certi-api", "usersa")} // Navigate to add user
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -313,7 +313,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="API - Certificate" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/overview", "userso")} // Navigate to users overview
+                  onClick={() => navigateTo("/server/forms-api", "userso")} // Navigate to users overview
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>
@@ -322,7 +322,7 @@ const Sidebar = ({ isMinimized, darkMode, activePage }) => {
                   <ListItemText primary="API - Forms" />
                 </ListItemButton>
                 <ListItemButton
-                  onClick={() => navigateTo("/users/add", "usersa")} // Navigate to add user
+                  onClick={() => navigateTo("/server/attendance-api", "usersa")} // Navigate to add user
                   sx={{ pl: 6, color: "#aaa" }}
                 >
                   <ListItemIcon sx={{ paddingLeft: isMinimized ? "10px" : "0px" }}>

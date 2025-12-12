@@ -12,10 +12,16 @@ import AddEvent from "./pages/addEvent";
 import Events from "./pages/eventOverview";
 import MyEvent from "./pages/myEvent";
 import Mailer from "./pages/mailer";
-import Samridhi from "./pages/samridhi";
 import UserOverview from "./pages/userOverview";
 import AddUser from "./pages/addUser";
-import Server from "./pages/server";
+import Health from "./pages/health";
+import Domain from "./pages/domain";
+import Samridhi from "./pages/samridhi";
+import ControlPane from "./pages/controlpanel";
+import APITicket from "./pages/api-ticket";
+import APICert from "./pages/api-certificate";
+import APIForms from "./pages/api-forms";
+import APIAtten from "./pages/api-attendance";
 import ForbiddenPage from "./pages/forbidden"; // Import the 403 page component
 import Cookies from "js-cookie"; // make sure it's imported
 import EventReg from "./pages/eventReg"; 
@@ -99,7 +105,14 @@ function App() {
   <Route path="/samridhi" element={<ProtectedRoute element={<Samridhi />} />} />
   <Route path="/users/overview" element={<ProtectedRoute element={<UserOverview />} />} />
   <Route path="/users/add" element={<ProtectedRoute element={<AddUser />} />} />
-  <Route path="/server" element={<ProtectedRoute element={<Server />} />} />
+  <Route path="/server/health" element={<ProtectedRoute element={<Health />} />} />
+  <Route path="/server/domain" element={<ProtectedRoute element={<Domain />} />} />
+  <Route path="/server/samridhi" element={<ProtectedRoute element={<Samridhi />} />} />
+  <Route path="/server/control-panel" element={<ProtectedRoute element={<ControlPane />} />} />
+  <Route path="/server/ticket-api" element={<ProtectedRoute element={<APITicket />} />} />
+  <Route path="/server/certi-api" element={<ProtectedRoute element={<APICert />} />} />
+  <Route path="/server/forms-api" element={<ProtectedRoute element={<APIForms />} />} />
+  <Route path="/server/attendance-api" element={<ProtectedRoute element={<APIAtten />} />} />
   <Route path="/event-registration" element={<ProtectedRoute element={<EventReg />} />} /> {/* Add this line */}
 
   {/* Public Routes */}
