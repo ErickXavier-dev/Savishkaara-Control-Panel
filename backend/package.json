@@ -25,6 +25,6 @@
     "pidusage": "^4.0.0",
     "socket.io": "^4.8.1",
     "systeminformation": "^5.30.8",
-    "ws": "^8.18.0"
+    "ws": "^8.20.1"
   }
 }
